@@ -121,8 +121,8 @@ class Api:
         response = APIPodResponse.parse_obj(h)
         return response
 
-    def list_partners(self):
-        h = self.get("partners")
+    def list_partners(self, page_size=50, offset=""):
+        h = self.get("partners", {"page_size": page_size, "offset": offset})
         response = ListAPIPartnerResponse.parse_obj(h)
         return response
 
@@ -131,8 +131,8 @@ class Api:
         response = APIPartnerResponse.parse_obj(h)
         return response
 
-    def list_schools(self):
-        h = self.get("schools")
+    def list_schools(self, page_size=50, offset=""):
+        h = self.get("schools", {"page_size": page_size, "offset": offset})
         response = ListAPISchoolResponse.parse_obj(h)
         return response
 
@@ -141,8 +141,8 @@ class Api:
         response = APISchoolResponse.parse_obj(h)
         return response
 
-    def list_educators(self):
-        h = self.get("educators")
+    def list_educators(self, page_size=50, offset=""):
+        h = self.get("educators", {"page_size": page_size, "offset": offset})
         response = ListAPIEducatorResponse.parse_obj(h)
         return response
 
