@@ -1,4 +1,16 @@
 [[package]]
+name = "autopep8"
+version = "1.6.0"
+description = "A tool that automatically formats Python code to conform to the PEP 8 style guide"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pycodestyle = ">=2.8.0"
+toml = "*"
+
+[[package]]
 name = "certifi"
 version = "2021.10.8"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -24,6 +36,14 @@ description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
 python-versions = ">=3.5"
+
+[[package]]
+name = "pycodestyle"
+version = "2.8.0"
+description = "Python style guide checker"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "pydantic"
@@ -59,6 +79,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "toml"
+version = "0.10.2"
+description = "Python Library for Tom's Obvious, Minimal Language"
+category = "dev"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "typing-extensions"
 version = "4.1.1"
 description = "Backported and Experimental Type Hints for Python 3.6+"
@@ -81,7 +109,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "wf-airtable-api-schema"
-version = "0.1.5"
+version = "0.1.6"
 description = "Simple package defining a schema translation layer between the client and Airtable bases"
 category = "main"
 optional = false
@@ -93,9 +121,13 @@ pydantic = ">=1.9.0,<2.0.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "3057615758d0b11df50334b98b4f57f90a1da8b0339e69322bc73f15ae1b0d5d"
+content-hash = "fd3d80bc51eb782d5504733beac655c3bc5ac6893f23d6127d6bd732da1dbcd4"
 
 [metadata.files]
+autopep8 = [
+    {file = "autopep8-1.6.0-py2.py3-none-any.whl", hash = "sha256:ed77137193bbac52d029a52c59bec1b0629b5a186c495f1eb21b126ac466083f"},
+    {file = "autopep8-1.6.0.tar.gz", hash = "sha256:44f0932855039d2c15c4510d6df665e4730f2b8582704fa48f9c55bd3e17d979"},
+]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
     {file = "certifi-2021.10.8.tar.gz", hash = "sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"},
@@ -107,6 +139,10 @@ charset-normalizer = [
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
+]
+pycodestyle = [
+    {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
+    {file = "pycodestyle-2.8.0.tar.gz", hash = "sha256:eddd5847ef438ea1c7870ca7eb78a9d47ce0cdb4851a5523949f2601d0cbbe7f"},
 ]
 pydantic = [
     {file = "pydantic-1.9.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:cb23bcc093697cdea2708baae4f9ba0e972960a835af22560f6ae4e7e47d33f5"},
@@ -149,6 +185,10 @@ requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
 ]
+toml = [
+    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
+    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
+]
 typing-extensions = [
     {file = "typing_extensions-4.1.1-py3-none-any.whl", hash = "sha256:21c85e0fe4b9a155d0799430b0ad741cdce7e359660ccbd8b530613e8df88ce2"},
     {file = "typing_extensions-4.1.1.tar.gz", hash = "sha256:1a9462dcc3347a79b1f1c0271fbe79e844580bb598bafa1ed208b94da3cdcd42"},
@@ -158,6 +198,6 @@ urllib3 = [
     {file = "urllib3-1.26.9.tar.gz", hash = "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"},
 ]
 wf-airtable-api-schema = [
-    {file = "wf-airtable-api-schema-0.1.5.tar.gz", hash = "sha256:4add83dd858da328c076a22d656950cb7efd405a63fb9b3c2e3c7e6419736ebd"},
-    {file = "wf_airtable_api_schema-0.1.5-py3-none-any.whl", hash = "sha256:6f508529019a9b72c11817eae5882f914564609f17f56578857827b76b370883"},
+    {file = "wf-airtable-api-schema-0.1.6.tar.gz", hash = "sha256:d7160d9bd5365ab4b104ea5c0b998a940f54ee0e1f4369d6aed75eaf4ff1c4a9"},
+    {file = "wf_airtable_api_schema-0.1.6-py3-none-any.whl", hash = "sha256:f6736786a72941e18e488cb22dc58e5b58096a3539d40f1bc7330508fe2049c4"},
 ]
