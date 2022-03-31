@@ -1,5 +1,7 @@
 import json
 import logging
+from typing import Union
+
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
@@ -63,15 +65,19 @@ class Api:
         data = response.json()
         return data['access_token']
 
-    def request(self, method, path, params: dict = None, data: dict = None):
+    def request(self, method, path, params: dict = None, data: Union[dict, bytes] = None):
         try:
             url = f"{self.api_url}/{path}"
+
+            d = data
+            if isinstance(data, dict):
+                d = json.dumps(data).encode("utf-8")
 
             response = self.session.request(
                 method=method,
                 url=url,
                 params=params,
-                data=data,
+                data=d,
                 headers={
                     "content-type": "application/json",
                     "authorization": f"Bearer {self.access_token}"
