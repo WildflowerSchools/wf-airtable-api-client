@@ -109,7 +109,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "wf-airtable-api-schema"
-version = "0.1.10"
+version = "0.1.11"
 description = "Simple package defining a schema translation layer between the client and Airtable bases"
 category = "main"
 optional = false
@@ -198,6 +198,6 @@ urllib3 = [
     {file = "urllib3-1.26.9.tar.gz", hash = "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"},
 ]
 wf-airtable-api-schema = [
-    {file = "wf-airtable-api-schema-0.1.10.tar.gz", hash = "sha256:db0fff9cf0584360a8fa004f2c5df861914596a3f0807368c0eae98b3450379b"},
-    {file = "wf_airtable_api_schema-0.1.10-py3-none-any.whl", hash = "sha256:15dbed2ee3b4c41216be0af569a2eae3e06ce2a27bd886d9418c5cb0b6be366f"},
+    {file = "wf-airtable-api-schema-0.1.11.tar.gz", hash = "sha256:eb11678a86de5d79f6f2e20ed4246e6241ba7512d4d76afc0d4550f550ce0019"},
+    {file = "wf_airtable_api_schema-0.1.11-py3-none-any.whl", hash = "sha256:a5ab546ada799592b48d88daa32b2f54b44ee228952492261e4a7ae22543d5aa"},
 ]
