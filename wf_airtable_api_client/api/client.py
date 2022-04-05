@@ -23,10 +23,10 @@ logger = logging.getLogger(__name__)
 
 class Api:
     def __init__(self,
-                 audience: str = const.WF_AIRTABLE_API_AUTH0_AUDIENCE,
-                 auth_domain: str = const.WF_AIRTABLE_API_AUTH0_DOMAIN,
-                 client_id: str = const.WF_AIRTABLE_API_AUTH0_CLIENT_ID,
-                 client_secret: str = const.WF_AIRTABLE_API_AUTH0_CLIENT_SECRET,
+                 audience: str = const.WF_AUTH0_AIRTABLE_API_AUDIENCE,
+                 auth_domain: str = const.WF_AUTH0_DOMAIN,
+                 client_id: str = const.WF_AUTH0_CLIENT_ID,
+                 client_secret: str = const.WF_AUTH0_CLIENT_SECRET,
                  api_url: str = const.WF_AIRTABLE_API_URL):
         self.audience = audience
         self.auth_domain = auth_domain

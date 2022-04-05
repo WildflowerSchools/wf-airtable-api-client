@@ -1,7 +1,7 @@
 import os
 
-WF_AUTH0_AUDIENCE = os.getenv(
-    "WF_AUTH0_AUDIENCE", None)
+WF_AUTH0_AIRTABLE_API_AUDIENCE = os.getenv(
+    "WF_AUTH0_AIRTABLE_API_AUDIENCE", None)
 
 WF_AUTH0_DOMAIN = os.getenv(
     "WF_AUTH0_DOMAIN", None)
