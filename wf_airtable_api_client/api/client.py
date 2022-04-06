@@ -180,6 +180,11 @@ class Api:
         response = APIEducatorResponse.parse_obj(r)
         return response
 
+    def get_educator_by_email(self, email):
+        r = self.get(f"find_by_email/{email}")
+        response = APIEducatorResponse.parse_obj(r)
+        return response
+
     def create_educator(self, educator_payload: CreateAPIEducatorFields):
         r = self.post("educators", data=educator_payload.dict())
         response = APIEducatorResponse.parse_obj(r)
