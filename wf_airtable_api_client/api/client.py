@@ -181,7 +181,7 @@ class Api:
         return response
 
     def get_educator_by_email(self, email):
-        r = self.get(f"find_by_email/{email}")
+        r = self.get(f"educators/find_by_email/{email}")
         response = APIEducatorResponse.parse_obj(r)
         return response
 
