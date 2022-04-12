@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wf-airtable-api-client"
-version = "1.2.0"
+version = "1.2.1"
 description = "WF Airtable API client"
 authors = ["Benjamin Jaffe-Talberg <ben.talberg@gmail.com>"]
 license = "MIT"
@@ -8,8 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.9"
 requests = "^2.27.1"
-#wf-airtable-api-schema = "^0.1.11"
-wf-airtable-api-schema = {path = "../wf-airtable-api-schema"}
+wf-airtable-api-schema = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 autopep8 = '>=1.5.5'
