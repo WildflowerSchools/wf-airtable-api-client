@@ -11,7 +11,8 @@ from wf_airtable_api_schema.models.partners import APIPartnerResponse, ListAPIPa
 from wf_airtable_api_schema.models.schools import APISchoolResponse, ListAPISchoolResponse
 from wf_airtable_api_schema.models.educators import APIEducatorResponse, ListAPIEducatorResponse, \
     CreateAPIEducatorFields
-from wf_airtable_api_schema.models.location_contacts import APILocationContactResponse, ListAPILocationContactResponse
+from wf_airtable_api_schema.models.geo_area_contacts import APIGeoAreaContactResponse, ListAPIGeoAreaContactResponse
+from wf_airtable_api_schema.models.geo_area_target_communities import APIGeoAreaTargetCommunityResponse, ListAPIGeoAreaTargetCommunityResponse
 from wf_airtable_api_schema.models.ssj_typeform_start_a_school import CreateApiSSJTypeformStartASchoolFields, \
     ApiSSJTypeformStartASchoolResponse
 
@@ -66,13 +67,13 @@ class Api:
         return data['access_token']
 
     def request(self, method, path, params: dict = None, data: Union[dict, bytes] = None):
+        url = f"{self.api_url}/{path}"
+
+        d = data
+        if isinstance(data, dict):
+            d = json.dumps(data).encode("utf-8")
+
         try:
-            url = f"{self.api_url}/{path}"
-
-            d = data
-            if isinstance(data, dict):
-                d = json.dumps(data).encode("utf-8")
-
             response = self.session.request(
                 method=method,
                 url=url,
@@ -87,16 +88,16 @@ class Api:
             return response
         except requests.exceptions.HTTPError as err:
             logger.exception(f"Request HTTPError ({err.response.status_code}): {url}")
-            raise(err)
+            raise err
         except requests.exceptions.ConnectionError as err:
             logger.exception(f"Request ConnectionError: {url}")
-            raise(err)
+            raise err
         except requests.exceptions.Timeout as err:
             logger.exception(f"Request Timeout: {url}")
-            raise(err)
+            raise err
         except requests.exceptions.RequestException as err:
             logger.exception(f"Unexpected RequestException ({err.response.status_code}): {url}")
-            raise(err)
+            raise err
 
     def get(self, path, params: dict = None):
         response = self.request(
@@ -190,19 +191,34 @@ class Api:
         response = APIEducatorResponse.parse_obj(r)
         return response
 
-    def list_location_contacts(self):
-        r = self.get("location_contacts")
-        response = ListAPILocationContactResponse.parse_obj(r)
+    def list_geo_area_contacts(self):
+        r = self.get("geo_mapping/contacts")
+        response = ListAPIGeoAreaContactResponse.parse_obj(r)
         return response
 
-    def get_location_contact_for_address(self, address):
-        r = self.get("location_contacts/contact_for_address", params={"address": address})
-        response = APILocationContactResponse.parse_obj(r)
+    def get_geo_area_contact_for_address(self, address):
+        r = self.get("geo_mapping/contacts/for_address", params={"address": address})
+        response = APIGeoAreaContactResponse.parse_obj(r)
         return response
 
-    def get_location_contact(self, educator_id):
-        r = self.get(f"location_contacts/{educator_id}")
-        response = APILocationContactResponse.parse_obj(r)
+    def get_geo_area_contact(self, geo_area_contact_id):
+        r = self.get(f"geo_mapping/contacts/{geo_area_contact_id}")
+        response = APIGeoAreaContactResponse.parse_obj(r)
+        return response
+
+    def list_geo_area_target_communities(self):
+        r = self.get("geo_mapping/target_communities")
+        response = ListAPIGeoAreaTargetCommunityResponse.parse_obj(r)
+        return response
+
+    def get_geo_area_target_community_for_address(self, address):
+        r = self.get("geo_mapping/target_communities/for_address", params={"address": address})
+        response = APIGeoAreaTargetCommunityResponse.parse_obj(r)
+        return response
+
+    def get_geo_area_target_community(self, geo_area_target_community_id):
+        r = self.get(f"geo_mapping/target_communities/{geo_area_target_community_id}")
+        response = APIGeoAreaTargetCommunityResponse.parse_obj(r)
         return response
 
     def create_survey_response(self, survey_payload: CreateApiSSJTypeformStartASchoolFields):
