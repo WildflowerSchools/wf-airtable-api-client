@@ -14,12 +14,14 @@ logger = logging.getLogger(__name__)
 
 
 class Api:
-    def __init__(self,
-                 audience: str = const.WF_AUTH0_AIRTABLE_API_AUDIENCE,
-                 auth_domain: str = const.WF_AUTH0_DOMAIN,
-                 client_id: str = const.WF_AUTH0_CLIENT_ID,
-                 client_secret: str = const.WF_AUTH0_CLIENT_SECRET,
-                 api_url: str = const.WF_AIRTABLE_API_URL):
+    def __init__(
+        self,
+        audience: str = const.WF_AUTH0_AIRTABLE_API_AUDIENCE,
+        auth_domain: str = const.WF_AUTH0_DOMAIN,
+        client_id: str = const.WF_AUTH0_CLIENT_ID,
+        client_secret: str = const.WF_AUTH0_CLIENT_SECRET,
+        api_url: str = const.WF_AIRTABLE_API_URL,
+    ):
         self.audience = audience
         self.auth_domain = auth_domain
         self.auth_url = f"https://{self.auth_domain}".rstrip("/")
@@ -36,7 +38,7 @@ class Api:
             total=3,
             backoff_factor=0.2,
             status_forcelist=[429, 500, 502, 503, 504],
-            method_whitelist=["HEAD", "GET", "OPTIONS"]
+            method_whitelist=["HEAD", "GET", "OPTIONS"],
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
         http = requests.Session()
@@ -47,15 +49,19 @@ class Api:
     def _load_access_token(self):
         _response = self.session.post(
             url=f"{self.auth_url}/oauth/token",
-            data=json.dumps({
-                "client_id": self.client_id,
-                "client_secret": self.client_secret,
-                "audience": self.audience,
-                "grant_type": "client_credentials"}),
-            headers={"content-type": "application/json"})
+            data=json.dumps(
+                {
+                    "client_id": self.client_id,
+                    "client_secret": self.client_secret,
+                    "audience": self.audience,
+                    "grant_type": "client_credentials",
+                }
+            ),
+            headers={"content-type": "application/json"},
+        )
 
         data = _response.json()
-        return data['access_token']
+        return data["access_token"]
 
     def request(self, method, path, params: dict = None, data: Union[dict, bytes] = None):
         url = f"{self.api_url}/{path}"
@@ -70,10 +76,7 @@ class Api:
                 url=url,
                 params=params,
                 data=d,
-                headers={
-                    "content-type": "application/json",
-                    "authorization": f"Bearer {self.access_token}"
-                }
+                headers={"content-type": "application/json", "authorization": f"Bearer {self.access_token}"},
             )
             _response.raise_for_status()
             return _response
@@ -91,12 +94,7 @@ class Api:
             raise err
 
     def _request(self, method, path, params: dict = None, data: dict = None):
-        _response = self.request(
-            method=method,
-            path=path,
-            params=params,
-            data=data
-        )
+        _response = self.request(method=method, path=path, params=params, data=data)
         return _response.json()
 
     def get(self, path, params: dict = None):
@@ -113,34 +111,22 @@ class Api:
         _response = ListAPIHubResponse.parse_obj(r)
         return _response
 
-    def get_hub(
-            self,
-            hub_id
-    ) -> APIHubResponse:
+    def get_hub(self, hub_id) -> APIHubResponse:
         r = self.get(f"hubs/{hub_id}")
         _response = APIHubResponse.parse_obj(r)
         return _response
 
-    def get_hub_regional_site_entrepreneurs(
-            self,
-            hub_id
-    ) -> ListAPIPartnerResponse:
+    def get_hub_regional_site_entrepreneurs(self, hub_id) -> ListAPIPartnerResponse:
         r = self.get(f"hubs/{hub_id}/regional_site_entrepreneurs")
         _response = ListAPIPartnerResponse.parse_obj(r)
         return _response
 
-    def get_hub_pods(
-            self,
-            hub_id
-    ) -> ListAPIPodResponse:
+    def get_hub_pods(self, hub_id) -> ListAPIPodResponse:
         r = self.get(f"hubs/{hub_id}/pods")
         _response = ListAPIPodResponse.parse_obj(r)
         return _response
 
-    def get_hub_schools(
-            self,
-            hub_id
-    ) -> ListAPISchoolResponse:
+    def get_hub_schools(self, hub_id) -> ListAPISchoolResponse:
         r = self.get(f"hubs/{hub_id}/schools")
         _response = ListAPISchoolResponse.parse_obj(r)
         return _response
@@ -150,77 +136,47 @@ class Api:
         _response = ListAPIPodResponse.parse_obj(r)
         return _response
 
-    def get_pod(
-            self,
-            pod_id
-    ) -> APIPodResponse:
+    def get_pod(self, pod_id) -> APIPodResponse:
         r = self.get(f"pods/{pod_id}")
         _response = APIPodResponse.parse_obj(r)
         return _response
 
-    def list_partners(
-            self,
-            page_size=50,
-            offset=""
-    ) -> ListAPIPartnerResponse:
+    def list_partners(self, page_size=50, offset="") -> ListAPIPartnerResponse:
         r = self.get("partners", {"page_size": page_size, "offset": offset})
         _response = ListAPIPartnerResponse.parse_obj(r)
         return _response
 
-    def get_partner(
-            self,
-            partner_id
-    ) -> APIPartnerResponse:
+    def get_partner(self, partner_id) -> APIPartnerResponse:
         r = self.get(f"partners/{partner_id}")
         _response = APIPartnerResponse.parse_obj(r)
         return _response
 
-    def list_schools(
-            self,
-            page_size=50,
-            offset=""
-    ) -> ListAPISchoolResponse:
+    def list_schools(self, page_size=50, offset="") -> ListAPISchoolResponse:
         r = self.get("schools", {"page_size": page_size, "offset": offset})
         _response = ListAPISchoolResponse.parse_obj(r)
         return _response
 
-    def find_schools(
-            self,
-            organizational_unit: Optional[str] = None
-    ) -> ListAPISchoolResponse:
+    def find_schools(self, organizational_unit: Optional[str] = None) -> ListAPISchoolResponse:
         r = self.get(f"schools/find", {"organizational_unit": organizational_unit})
         _response = ListAPISchoolResponse.parse_obj(r)
         return _response
 
-    def get_school(
-            self,
-            school_id
-    ) -> APISchoolResponse:
+    def get_school(self, school_id) -> APISchoolResponse:
         r = self.get(f"schools/{school_id}")
         _response = APISchoolResponse.parse_obj(r)
         return _response
 
-    def list_educators(
-            self,
-            page_size=50,
-            offset=""
-    ) -> ListAPIEducatorResponse:
+    def list_educators(self, page_size=50, offset="") -> ListAPIEducatorResponse:
         r = self.get("educators", {"page_size": page_size, "offset": offset})
         _response = ListAPIEducatorResponse.parse_obj(r)
         return _response
 
-    def get_educator(
-            self,
-            educator_id
-    ) -> APIEducatorResponse:
+    def get_educator(self, educator_id) -> APIEducatorResponse:
         r = self.get(f"educators/{educator_id}")
         _response = APIEducatorResponse.parse_obj(r)
         return _response
 
-    def find_educators(
-            self,
-            email: Optional[Union[str, list[str]]] = None
-    ) -> ListAPIEducatorResponse:
+    def find_educators(self, email: Optional[Union[str, list[str]]] = None) -> ListAPIEducatorResponse:
         params = {}
         if email:
             email_param = email
@@ -233,48 +189,34 @@ class Api:
         _response = ListAPIEducatorResponse.parse_obj(r)
         return _response
 
-    def get_educator_by_email(
-            self,
-            email
-    ) -> Optional[APIEducatorResponse]:
+    def get_educator_by_email(self, email) -> Optional[APIEducatorResponse]:
         _educators = self.find_educators(email)
         if len(_educators.data) == 0:
             return None
 
-        return APIEducatorResponse(
-            data=_educators.data[0],
-            links=_educators.links,
-            meta=_educators.meta)
+        return APIEducatorResponse(data=_educators.data[0], links=_educators.links, meta=_educators.meta)
 
-    def create_educator(
-            self,
-            educator_payload: CreateAPIEducatorFields
-    ) -> APIEducatorResponse:
+    def create_educator(self, educator_payload: CreateAPIEducatorFields) -> APIEducatorResponse:
         r = self.post("educators", data=educator_payload.dict())
         _response = APIEducatorResponse.parse_obj(r)
         return _response
 
     def find_educators_schools(
-            self,
-            educator_id: Optional[str] = None,
-            school_id: Optional[str] = None
+        self, educator_id: Optional[str] = None, school_id: Optional[str] = None
     ) -> ListAPIEducatorSchoolResponse:
         r = self.get(f"educators_schools/find", {"educator_id": educator_id, "school_id": school_id})
         _response = ListAPIEducatorSchoolResponse.parse_obj(r)
         return _response
 
     def create_educator_school(
-            self,
-            educator_school_payload: CreateUpdateAPIEducatorSchoolFields
+        self, educator_school_payload: CreateUpdateAPIEducatorSchoolFields
     ) -> APIEducatorSchoolResponse:
         r = self.post("educators_schools", data=educator_school_payload.dict())
         _response = APIEducatorSchoolResponse.parse_obj(r)
         return _response
 
     def update_educator_school(
-            self,
-            record_id: str,
-            educator_school_payload: CreateUpdateAPIEducatorSchoolFields
+        self, record_id: str, educator_school_payload: CreateUpdateAPIEducatorSchoolFields
     ) -> APIEducatorSchoolResponse:
         r = self.put(f"educators_schools/{record_id}", data=educator_school_payload.dict())
         _response = APIEducatorSchoolResponse.parse_obj(r)
@@ -285,18 +227,12 @@ class Api:
         _response = ListAPIGeoAreaContactResponse.parse_obj(r)
         return _response
 
-    def get_geo_area_contact_for_address(
-            self,
-            address
-    ) -> APIGeoAreaContactResponse:
+    def get_geo_area_contact_for_address(self, address) -> APIGeoAreaContactResponse:
         r = self.get("geo_mapping/contacts/for_address", params={"address": address})
         _response = APIGeoAreaContactResponse.parse_obj(r)
         return _response
 
-    def get_geo_area_contact(
-            self,
-            geo_area_contact_id
-    ) -> APIGeoAreaContactResponse:
+    def get_geo_area_contact(self, geo_area_contact_id) -> APIGeoAreaContactResponse:
         r = self.get(f"geo_mapping/contacts/{geo_area_contact_id}")
         _response = APIGeoAreaContactResponse.parse_obj(r)
         return _response
@@ -306,25 +242,18 @@ class Api:
         _response = ListAPIGeoAreaTargetCommunityResponse.parse_obj(r)
         return _response
 
-    def get_geo_area_target_community_for_address(
-            self,
-            address
-    ) -> APIGeoAreaTargetCommunityResponse:
+    def get_geo_area_target_community_for_address(self, address) -> APIGeoAreaTargetCommunityResponse:
         r = self.get("geo_mapping/target_communities/for_address", params={"address": address})
         _response = APIGeoAreaTargetCommunityResponse.parse_obj(r)
         return _response
 
-    def get_geo_area_target_community(
-            self,
-            geo_area_target_community_id
-    ) -> APIGeoAreaTargetCommunityResponse:
+    def get_geo_area_target_community(self, geo_area_target_community_id) -> APIGeoAreaTargetCommunityResponse:
         r = self.get(f"geo_mapping/target_communities/{geo_area_target_community_id}")
         _response = APIGeoAreaTargetCommunityResponse.parse_obj(r)
         return _response
 
     def create_survey_response(
-            self,
-            survey_payload: CreateApiSSJTypeformStartASchoolFields
+        self, survey_payload: CreateApiSSJTypeformStartASchoolFields
     ) -> ApiSSJTypeformStartASchoolResponse:
         r = self.post("ssj_typeforms/start_a_school_response", data=survey_payload.dict())
         _response = ApiSSJTypeformStartASchoolResponse.parse_obj(r)
