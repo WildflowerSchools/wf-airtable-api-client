@@ -90,7 +90,10 @@ class Api:
             logger.exception(f"Request Timeout: {url}")
             raise err
         except requests.exceptions.RequestException as err:
-            logger.exception(f"Unexpected RequestException ({err.response.status_code}): {url}")
+            err_msg = str(err)
+            if err.response is not None:
+                err_msg = err.response.status_code
+            logger.exception(f"Unexpected RequestException ({err_msg}): {url}")
             raise err
 
     def _request(self, method, path, params: dict = None, data: dict = None):
