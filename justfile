@@ -7,3 +7,9 @@ fmt:
 
 test:
     PYTHONPATH=./ pytest -s
+
+build:
+    poetry build
+
+deploy: build
+    poetry publish
