@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-requests = "^2.27.1"
+requests = "^2.31.0"
 wf-airtable-api-schema = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
