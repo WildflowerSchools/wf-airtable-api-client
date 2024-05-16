@@ -6,6 +6,7 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 from wf_airtable_api_schema.models import *
+from wf_airtable_api_schema.models.auto_response_email_template import APIAutoResponseEmailTemplateResponse
 
 from .. import const
 
@@ -225,6 +226,16 @@ class Api:
         _response = APIEducatorSchoolResponse.parse_obj(r)
         return _response
 
+    def list_geo_areas(self) -> ListAPIGeoAreaResponse:
+        r = self.get("geo_mapping/geographic_areas")
+        _response = ListAPIGeoAreaResponse.parse_obj(r)
+        return _response
+
+    def get_geo_area_for_address(self, address) -> APIGeoAreaResponse:
+        r = self.get("geo_mapping/geographic_areas/for_address", params={"address": address})
+        _response = APIGeoAreaResponse.parse_obj(r)
+        return _response
+
     def list_geo_area_contacts(self) -> ListAPIGeoAreaContactResponse:
         r = self.get("geo_mapping/contacts")
         _response = ListAPIGeoAreaContactResponse.parse_obj(r)
@@ -255,9 +266,26 @@ class Api:
         _response = APIGeoAreaTargetCommunityResponse.parse_obj(r)
         return _response
 
+    def get_geo_area_auto_response_email_template_for_address(self, address, contact_type=None, language=None) -> APIAutoResponseEmailTemplateResponse:
+        params={"address": address}
+        if contact_type is not None:
+            params["contact_type"] = contact_type
+        if language is not None:
+            params["language"] = language
+        r = self.get("geo_mapping/auto_response_email_templates/for_address", params=params)
+        _response = APIAutoResponseEmailTemplateResponse.parse_obj(r)
+        return _response
+
     def create_survey_response(
         self, survey_payload: CreateApiSSJTypeformStartASchoolFields
     ) -> ApiSSJTypeformStartASchoolResponse:
         r = self.post("ssj_typeforms/start_a_school_response", data=survey_payload.dict())
         _response = ApiSSJTypeformStartASchoolResponse.parse_obj(r)
+        return _response
+
+    def create_fillout_get_involved_response(
+            self, survey_payload: CreateApiSSJFilloutGetInvolvedFields
+    ) -> ApiSSJFilloutGetInvolvedResponse:
+        r = self.post("ssj_fillout/get_involved_response", data=survey_payload.dict())
+        _response = ApiSSJFilloutGetInvolvedResponse.parse_obj(r)
         return _response
