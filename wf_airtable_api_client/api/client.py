@@ -1,7 +1,5 @@
 import json
 import logging
-from typing import Union
-
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
@@ -64,12 +62,19 @@ class Api:
         data = _response.json()
         return data["access_token"]
 
+    @staticmethod
+    def json_serializer(obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+
+        raise TypeError("Type not serializable")
+
     def request(self, method, path, params: dict = None, data: Union[dict, bytes] = None):
         url = f"{self.api_url}/{path}"
 
         d = data
         if isinstance(data, dict):
-            d = json.dumps(data).encode("utf-8")
+            d = json.dumps(data, default=Api.json_serializer).encode("utf-8")
 
         try:
             _response = self.session.request(
@@ -110,74 +115,77 @@ class Api:
     def put(self, path, params: dict = None, data: dict = None):
         return self._request("PUT", path, params, data)
 
+    def patch(self, path, params: dict = None, data: dict = None):
+        return self._request("PATCH", path, params, data)
+
     def list_hubs(self) -> ListAPIHubResponse:
         r = self.get("hubs")
-        _response = ListAPIHubResponse.parse_obj(r)
+        _response = ListAPIHubResponse.model_validate(r)
         return _response
 
     def get_hub(self, hub_id) -> APIHubResponse:
         r = self.get(f"hubs/{hub_id}")
-        _response = APIHubResponse.parse_obj(r)
+        _response = APIHubResponse.model_validate(r)
         return _response
 
     def get_hub_regional_site_entrepreneurs(self, hub_id) -> ListAPIPartnerResponse:
         r = self.get(f"hubs/{hub_id}/regional_site_entrepreneurs")
-        _response = ListAPIPartnerResponse.parse_obj(r)
+        _response = ListAPIPartnerResponse.model_validate(r)
         return _response
 
     def get_hub_pods(self, hub_id) -> ListAPIPodResponse:
         r = self.get(f"hubs/{hub_id}/pods")
-        _response = ListAPIPodResponse.parse_obj(r)
+        _response = ListAPIPodResponse.model_validate(r)
         return _response
 
     def get_hub_schools(self, hub_id) -> ListAPISchoolResponse:
         r = self.get(f"hubs/{hub_id}/schools")
-        _response = ListAPISchoolResponse.parse_obj(r)
+        _response = ListAPISchoolResponse.model_validate(r)
         return _response
 
     def list_pods(self) -> ListAPIPodResponse:
         r = self.get("pods")
-        _response = ListAPIPodResponse.parse_obj(r)
+        _response = ListAPIPodResponse.model_validate(r)
         return _response
 
     def get_pod(self, pod_id) -> APIPodResponse:
         r = self.get(f"pods/{pod_id}")
-        _response = APIPodResponse.parse_obj(r)
+        _response = APIPodResponse.model_validate(r)
         return _response
 
     def list_partners(self, page_size=50, offset="") -> ListAPIPartnerResponse:
         r = self.get("partners", {"page_size": page_size, "offset": offset})
-        _response = ListAPIPartnerResponse.parse_obj(r)
+        _response = ListAPIPartnerResponse.model_validate(r)
         return _response
 
     def get_partner(self, partner_id) -> APIPartnerResponse:
         r = self.get(f"partners/{partner_id}")
-        _response = APIPartnerResponse.parse_obj(r)
+        _response = APIPartnerResponse.model_validate(r)
         return _response
 
     def list_schools(self, page_size=50, offset="") -> ListAPISchoolResponse:
         r = self.get("schools", {"page_size": page_size, "offset": offset})
-        _response = ListAPISchoolResponse.parse_obj(r)
+        _response = ListAPISchoolResponse.model_validate(r)
         return _response
 
     def find_schools(self, organizational_unit: Optional[str] = None) -> ListAPISchoolResponse:
         r = self.get(f"schools/find", {"organizational_unit": organizational_unit})
-        _response = ListAPISchoolResponse.parse_obj(r)
+        _response = ListAPISchoolResponse.model_validate(r)
         return _response
 
     def get_school(self, school_id) -> APISchoolResponse:
         r = self.get(f"schools/{school_id}")
-        _response = APISchoolResponse.parse_obj(r)
+        _response = APISchoolResponse.model_validate(r)
         return _response
 
     def list_educators(self, page_size=50, offset="") -> ListAPIEducatorResponse:
         r = self.get("educators", {"page_size": page_size, "offset": offset})
-        _response = ListAPIEducatorResponse.parse_obj(r)
+        _response = ListAPIEducatorResponse.model_validate(r)
         return _response
 
     def get_educator(self, educator_id) -> APIEducatorResponse:
         r = self.get(f"educators/{educator_id}")
-        _response = APIEducatorResponse.parse_obj(r)
+        _response = APIEducatorResponse.model_validate(r)
         return _response
 
     def find_educators(self, email: Optional[Union[str, list[str]]] = None) -> ListAPIEducatorResponse:
@@ -190,7 +198,7 @@ class Api:
             params["email"] = email_param
 
         r = self.get(f"educators/find", params)
-        _response = ListAPIEducatorResponse.parse_obj(r)
+        _response = ListAPIEducatorResponse.model_validate(r)
         return _response
 
     def get_educator_by_email(self, email) -> Optional[APIEducatorResponse]:
@@ -200,92 +208,99 @@ class Api:
 
         return APIEducatorResponse(data=_educators.data[0], links=_educators.links, meta=_educators.meta)
 
-    def create_educator(self, educator_payload: CreateAPIEducatorFields) -> APIEducatorResponse:
+    def create_educator(self, educator_payload: CreateUpdateAPIEducatorFields) -> APIEducatorResponse:
         r = self.post("educators", data=educator_payload.dict())
-        _response = APIEducatorResponse.parse_obj(r)
+        _response = APIEducatorResponse.model_validate(r)
+        return _response
+
+    def update_educator(self, record_id: str, educator_payload: CreateUpdateAPIEducatorFields) -> APIEducatorResponse:
+        r = self.patch(f"educators/{record_id}", data=educator_payload.model_dump(exclude_unset=True))
+        _response = APIEducatorResponse.model_validate(r)
         return _response
 
     def find_educators_schools(
         self, educator_id: Optional[str] = None, school_id: Optional[str] = None
     ) -> ListAPIEducatorSchoolResponse:
         r = self.get(f"educators_schools/find", {"educator_id": educator_id, "school_id": school_id})
-        _response = ListAPIEducatorSchoolResponse.parse_obj(r)
+        _response = ListAPIEducatorSchoolResponse.model_validate(r)
         return _response
 
     def create_educator_school(
         self, educator_school_payload: CreateUpdateAPIEducatorSchoolFields
     ) -> APIEducatorSchoolResponse:
         r = self.post("educators_schools", data=educator_school_payload.dict())
-        _response = APIEducatorSchoolResponse.parse_obj(r)
+        _response = APIEducatorSchoolResponse.model_validate(r)
         return _response
 
     def update_educator_school(
         self, record_id: str, educator_school_payload: CreateUpdateAPIEducatorSchoolFields
     ) -> APIEducatorSchoolResponse:
         r = self.put(f"educators_schools/{record_id}", data=educator_school_payload.dict())
-        _response = APIEducatorSchoolResponse.parse_obj(r)
+        _response = APIEducatorSchoolResponse.model_validate(r)
         return _response
 
     def list_geo_areas(self) -> ListAPIGeoAreaResponse:
         r = self.get("geo_mapping/geographic_areas")
-        _response = ListAPIGeoAreaResponse.parse_obj(r)
+        _response = ListAPIGeoAreaResponse.model_validate(r)
         return _response
 
     def get_geo_area_for_address(self, address) -> APIGeoAreaResponse:
         r = self.get("geo_mapping/geographic_areas/for_address", params={"address": address})
-        _response = APIGeoAreaResponse.parse_obj(r)
+        _response = APIGeoAreaResponse.model_validate(r)
         return _response
 
     def list_geo_area_contacts(self) -> ListAPIGeoAreaContactResponse:
         r = self.get("geo_mapping/contacts")
-        _response = ListAPIGeoAreaContactResponse.parse_obj(r)
+        _response = ListAPIGeoAreaContactResponse.model_validate(r)
         return _response
 
     def get_geo_area_contact_for_address(self, address) -> APIGeoAreaContactResponse:
         r = self.get("geo_mapping/contacts/for_address", params={"address": address})
-        _response = APIGeoAreaContactResponse.parse_obj(r)
+        _response = APIGeoAreaContactResponse.model_validate(r)
         return _response
 
     def get_geo_area_contact(self, geo_area_contact_id) -> APIGeoAreaContactResponse:
         r = self.get(f"geo_mapping/contacts/{geo_area_contact_id}")
-        _response = APIGeoAreaContactResponse.parse_obj(r)
+        _response = APIGeoAreaContactResponse.model_validate(r)
         return _response
 
     def list_geo_area_target_communities(self) -> ListAPIGeoAreaTargetCommunityResponse:
         r = self.get("geo_mapping/target_communities")
-        _response = ListAPIGeoAreaTargetCommunityResponse.parse_obj(r)
+        _response = ListAPIGeoAreaTargetCommunityResponse.model_validate(r)
         return _response
 
     def get_geo_area_target_community_for_address(self, address) -> APIGeoAreaTargetCommunityResponse:
         r = self.get("geo_mapping/target_communities/for_address", params={"address": address})
-        _response = APIGeoAreaTargetCommunityResponse.parse_obj(r)
+        _response = APIGeoAreaTargetCommunityResponse.model_validate(r)
         return _response
 
     def get_geo_area_target_community(self, geo_area_target_community_id) -> APIGeoAreaTargetCommunityResponse:
         r = self.get(f"geo_mapping/target_communities/{geo_area_target_community_id}")
-        _response = APIGeoAreaTargetCommunityResponse.parse_obj(r)
+        _response = APIGeoAreaTargetCommunityResponse.model_validate(r)
         return _response
 
-    def get_geo_area_auto_response_email_template_for_address(self, address, contact_type=None, language=None) -> APIAutoResponseEmailTemplateResponse:
-        params={"address": address}
+    def get_geo_area_auto_response_email_template_for_address(
+        self, address, contact_type=None, language=None
+    ) -> APIAutoResponseEmailTemplateResponse:
+        params = {"address": address}
         if contact_type is not None:
             params["contact_type"] = contact_type
         if language is not None:
             params["language"] = language
         r = self.get("geo_mapping/auto_response_email_templates/for_address", params=params)
-        _response = APIAutoResponseEmailTemplateResponse.parse_obj(r)
+        _response = APIAutoResponseEmailTemplateResponse.model_validate(r)
         return _response
 
     def create_survey_response(
         self, survey_payload: CreateApiSSJTypeformStartASchoolFields
     ) -> ApiSSJTypeformStartASchoolResponse:
         r = self.post("ssj_typeforms/start_a_school_response", data=survey_payload.dict())
-        _response = ApiSSJTypeformStartASchoolResponse.parse_obj(r)
+        _response = ApiSSJTypeformStartASchoolResponse.model_validate(r)
         return _response
 
     def create_fillout_get_involved_response(
-            self, survey_payload: CreateApiSSJFilloutGetInvolvedFields
+        self, survey_payload: CreateApiSSJFilloutGetInvolvedFields
     ) -> ApiSSJFilloutGetInvolvedResponse:
         r = self.post("ssj_fillout/get_involved_response", data=survey_payload.dict())
-        _response = ApiSSJFilloutGetInvolvedResponse.parse_obj(r)
+        _response = ApiSSJFilloutGetInvolvedResponse.model_validate(r)
         return _response
