@@ -3,8 +3,7 @@ import logging
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-from wf_airtable_api_schema.models import *
-from wf_airtable_api_schema.models.auto_response_email_template import APIAutoResponseEmailTemplateResponse
+from wf_airtable_api_client.models import *
 
 from .. import const
 
@@ -280,13 +279,15 @@ class Api:
         return _response
 
     def get_geo_area_auto_response_email_template_for_address(
-        self, address, contact_type=None, language=None
+        self, address, contact_type=None, language=None, marketing_source=None
     ) -> APIAutoResponseEmailTemplateResponse:
         params = {"address": address}
         if contact_type is not None:
             params["contact_type"] = contact_type
         if language is not None:
             params["language"] = language
+        if marketing_source is not None:
+            params["marketing_source"] = marketing_source
         r = self.get("geo_mapping/auto_response_email_templates/for_address", params=params)
         _response = APIAutoResponseEmailTemplateResponse.model_validate(r)
         return _response
