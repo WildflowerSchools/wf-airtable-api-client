@@ -15,16 +15,17 @@ class APIGeoAreaContactFields(BaseModel):
     polygon_coordinates: Optional[str] = None
     first_contact_email: Optional[str] = None
     assigned_rse_name: Optional[str] = None
-    hub_name: Optional[str] = None
+    # hub_name: Optional[str] = None
     sendgrid_template_id: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     geocode: Optional[dict] = None
+    marketing_source: Optional[str] = None
     # auto_response_email_template_ids: Optional[list[str]] = None
 
 
 class APIGeoAreaContactRelationships(BaseModel):
-    hub: Optional[response_models.APILinksAndData] = None
+    # hub: Optional[response_models.APILinksAndData] = None
     assigned_rse: Optional[response_models.APILinksAndData] = None
     auto_response_email_templates: Optional[list[response_models.APILinksAndData]] = None
 

@@ -253,8 +253,12 @@ class Api:
         _response = ListAPIGeoAreaContactResponse.model_validate(r)
         return _response
 
-    def get_geo_area_contact_for_address(self, address) -> APIGeoAreaContactResponse:
-        r = self.get("geo_mapping/contacts/for_address", params={"address": address})
+    def get_geo_area_contact_for_address(self, address, marketing_source=None) -> APIGeoAreaContactResponse:
+        params = {"address": address}
+        if marketing_source is not None:
+            params["marketing_source"] = marketing_source
+
+        r = self.get("geo_mapping/contacts/for_address", params)
         _response = APIGeoAreaContactResponse.model_validate(r)
         return _response
 
