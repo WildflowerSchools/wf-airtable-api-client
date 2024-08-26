@@ -18,7 +18,7 @@ class APISchoolFields(BaseModel):
     domain_name: Optional[str] = None
     address: Optional[str] = None
     hub_name: Optional[str] = None
-    pod_name: Optional[str] = None
+    # pod_name: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
 
@@ -49,7 +49,7 @@ class APISchoolMetaFields(BaseModel):
     __annotations__ = getattr(BaseModel, "__annotations__", {}).copy()
     copy_field(APISchoolFields, "name", __annotations__)
     copy_field(APISchoolFields, "hub_name", __annotations__)
-    copy_field(APISchoolFields, "pod_name", __annotations__)
+    # copy_field(APISchoolFields, "pod_name", __annotations__)
     copy_field(APISchoolFields, "domain_name", __annotations__)
     copy_field(APISchoolFields, "status", __annotations__)
     copy_field(APISchoolFields, "ssj_stage", __annotations__)
@@ -57,7 +57,7 @@ class APISchoolMetaFields(BaseModel):
 
 class APISchoolRelationships(BaseModel):
     hub: Optional[response_models.APILinksAndData] = None
-    pod: Optional[response_models.APILinksAndData] = None
+    # pod: Optional[response_models.APILinksAndData] = None
     guides_and_entrepreneurs: Optional[response_models.APILinksAndData] = None
     educators: Optional[response_models.APILinksAndData] = None
     current_educators: Optional[response_models.APILinksAndData] = None

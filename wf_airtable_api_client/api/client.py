@@ -132,25 +132,25 @@ class Api:
         _response = ListAPIPartnerResponse.model_validate(r)
         return _response
 
-    def get_hub_pods(self, hub_id) -> ListAPIPodResponse:
-        r = self.get(f"hubs/{hub_id}/pods")
-        _response = ListAPIPodResponse.model_validate(r)
-        return _response
+    # def get_hub_pods(self, hub_id) -> ListAPIPodResponse:
+    #     r = self.get(f"hubs/{hub_id}/pods")
+    #     _response = ListAPIPodResponse.model_validate(r)
+    #     return _response
 
     def get_hub_schools(self, hub_id) -> ListAPISchoolResponse:
         r = self.get(f"hubs/{hub_id}/schools")
         _response = ListAPISchoolResponse.model_validate(r)
         return _response
 
-    def list_pods(self) -> ListAPIPodResponse:
-        r = self.get("pods")
-        _response = ListAPIPodResponse.model_validate(r)
-        return _response
+    # def list_pods(self) -> ListAPIPodResponse:
+    #     r = self.get("pods")
+    #     _response = ListAPIPodResponse.model_validate(r)
+    #     return _response
 
-    def get_pod(self, pod_id) -> APIPodResponse:
-        r = self.get(f"pods/{pod_id}")
-        _response = APIPodResponse.model_validate(r)
-        return _response
+    # def get_pod(self, pod_id) -> APIPodResponse:
+    #     r = self.get(f"pods/{pod_id}")
+    #     _response = APIPodResponse.model_validate(r)
+    #     return _response
 
     def list_partners(self, page_size=50, offset="") -> ListAPIPartnerResponse:
         r = self.get("partners", {"page_size": page_size, "offset": offset})

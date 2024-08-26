@@ -14,7 +14,7 @@ class APIHubFields(BaseModel):
 
 class APIHubRelationships(BaseModel):
     regional_site_entrepreneurs: Optional[response_models.APILinksAndData] = None
-    pods: Optional[response_models.APILinksAndData] = None
+    # pods: Optional[response_models.APILinksAndData] = None
     schools: Optional[response_models.APILinksAndData] = None
 
 

@@ -18,7 +18,7 @@ class APIPartnerFields(BaseModel):
 
 class APIPartnerRelationships(BaseModel):
     hubs_as_entrepreneur: Optional[response_models.APILinks] = None
-    pods_as_contact: Optional[response_models.APILinks] = None
+    # pods_as_contact: Optional[response_models.APILinks] = None
     schools_partner_guiding: Optional[response_models.APILinksAndData] = None
     educators_partner_guiding: Optional[response_models.APILinksAndData] = None
 

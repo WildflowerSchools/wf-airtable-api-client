@@ -10,7 +10,7 @@ from .hubs import *
 from .languages import *
 from .montessori_certifications import *
 from .partners import *
-from .pods import *
+# from .pods import *
 from .response import *
 from .schools import *
 from .ssj_fillout_get_involved import *
